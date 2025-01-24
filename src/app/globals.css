@@ -1,7 +1,30 @@
 @tailwind base;
+/* Hide scrollbar for WebKit browsers */
+.scroll-container::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Edge */
+  }
+  
+  /* Hide scrollbar for other browsers */
+  .scroll-container {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+    overflow: -moz-scrollbars-none; /* Older versions of Firefox */
+  }
+  
+  /* Fallback for Safari (optional - not needed if the scrollbar is hidden in webkit above) */
+  .scroll-container {
+    overflow: auto; /* Ensures scrollable content */
+  }
 @tailwind components;
 @tailwind utilities;
 
 @layer components {
-  
+  html,
+  body {
+    @apply bg-white m-0 p-0 w-full h-full selection:bg-slate-600 selection:text-white;
+  }
+
+  * {
+    @apply box-border;
+  }
 }
