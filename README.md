@@ -2,7 +2,7 @@
 
 ## Introduction
 
-A __Personalized AI agent__ for next generation of accessible learning. Utilizing the power of __Generative AI__, to generate:
+A __Personalized AI agent__ for next generation of accessible learning. Our theme is education for all. Utilizing the power of __Generative AI__, to generate:
 
 1. Personalized Responses
 2. Video Visualizations
