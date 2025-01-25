@@ -42,28 +42,28 @@ const ChatBotChat = () => {
           {
             role: "MindLoom",
             category: "chat",
-            content: "Just Wait! Fetching your chats; if any...",
+            content: "MindLoom has been shut down, and transferred to [mypath.one](https://mypath.one).",
           },
         ]);
-        const resp = await fetchChatHistory();
-        if (resp.length <= 0) {
-          setMessages([
-            {
-              role: "MindLoom",
-              category: "chat",
-              content: "Hi there! Up for something new.",
-            },
-          ]);
-        } else {
-          const initialMessage: ChatbotMessageType[] = [
-            {
-              role: "MindLoom",
-              category: "chat",
-              content: "Hi there! Up for something new.",
-            },
-          ];
-          setMessages([...initialMessage, ...resp]);
-        }
+        // const resp = await fetchChatHistory();
+        // if (resp.length <= 0) {
+        //   setMessages([
+        //     {
+        //       role: "MindLoom",
+        //       category: "chat",
+        //       content: "Hi there! Up for something new.",
+        //     },
+        //   ]);
+        // } else {
+        //   const initialMessage: ChatbotMessageType[] = [
+        //     {
+        //       role: "MindLoom",
+        //       category: "chat",
+        //       content: "Hi there! Up for something new.",
+        //     },
+        //   ];
+        //   setMessages([...initialMessage, ...resp]);
+        // }
       } catch (error) {
         setMessages([
           {

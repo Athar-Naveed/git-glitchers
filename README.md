@@ -18,6 +18,7 @@ A __Personalized AI agent__ for the next generation of accessible learning. Our 
 ## Technologies Used
 
 We majorly used 3 technologies to build the entire platform:
+We majorly used 3 technologies to build the entire platform:
 
 1. __Next Js/TypeScript (Frontend)__
 2. __FastAPI/Python (Backend)__
@@ -26,13 +27,13 @@ We majorly used 3 technologies to build the entire platform:
 
 ## Deployments
 
-Our frontend is deployed on __Vercel__, and the backend is deployed on __Azure__.
+Our frontend is deployed on __Vercel__, and backend is deployed on __Azure__.
 Accessible Link:
 [MindLoom](https://git-glitchers.vercel.app)
 
 ## Backend Code Repo
 
-If you want to view the backend code:
+If you want to view backend code:
 
 [Backend Repo](https://github.com/Fahad-Rashid1100/SOFTCOM_SUBMISSION.git)
 
