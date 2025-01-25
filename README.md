@@ -7,6 +7,7 @@ A __Personalized AI agent__ for next generation of accessible learning. Our them
 1. Personalized Responses
 2. Video Visualizations
 3. Real Time Quizes
+4. Multi-Lingual Abilities
 
 ## Team members
 
