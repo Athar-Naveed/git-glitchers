@@ -7,6 +7,8 @@ import {Send, WandSparkles} from "lucide-react";
 import { chatbotChat,visualizer,fetchChatHistory } from "@/handler/chatbotChat";
 import {ChatbotMessageType} from "@/types";
 import ChatbotMessages from "./messages";
+import stateStore from "@/store/zuStore";
+import QuizModal from "../quiz/modal";
 
 // ------------------------
 // Chatbot chat code starts here
@@ -16,7 +18,7 @@ const ChatBotChat = () => {
   const [thinking, setThinking] = useState(false);
   const [remainingChars, setRemainingChars] = useState(3000);
   const [inputMessage, setInputMessage] = useState("");
-
+  const {showQuiz,setShowQuiz,setQuiz} = stateStore();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   
@@ -28,15 +30,6 @@ const ChatBotChat = () => {
     textareaRef.current?.focus();
   }, []);
   
-  // ------------------------
-  // Focus the input field whenever the chatbot receives a response
-  // Commenting to increase the performance
-  // ------------------------
-  // useEffect(() => {
-  //   if (!thinking) {
-  //     textareaRef.current?.focus();
-  //   }
-  // }, [thinking]);
   
   // ------------------------
   // Fetching chat history here
@@ -48,6 +41,7 @@ const ChatBotChat = () => {
         setMessages([
           {
             role: "MindLoom",
+            category: "chat",
             content: "Just Wait! Fetching your chats; if any...",
           },
         ]);
@@ -56,6 +50,7 @@ const ChatBotChat = () => {
           setMessages([
             {
               role: "MindLoom",
+              category: "chat",
               content: "Hi there! Up for something new.",
             },
           ]);
@@ -63,6 +58,7 @@ const ChatBotChat = () => {
           const initialMessage: ChatbotMessageType[] = [
             {
               role: "MindLoom",
+              category: "chat",
               content: "Hi there! Up for something new.",
             },
           ];
@@ -72,6 +68,7 @@ const ChatBotChat = () => {
         setMessages([
           {
             role: "MindLoom",
+            category: "chat",
             content: `The chatbot got chills🥶 while fetching your chats! Please try refreshing the page!`,
           },
         ]);
@@ -94,7 +91,7 @@ const ChatBotChat = () => {
       textarea.style.height = "auto";
       textarea.style.height = `${Math.min(textarea.scrollHeight, 150)}px`;
     };
-  
+    
     const handleResize = () => requestAnimationFrame(adjustHeight);
     handleResize();
   }, [inputMessage]);
@@ -113,37 +110,57 @@ const ChatBotChat = () => {
   // Actual send message function starts here
   // -----------------------
   const handleSendMessage = async () => {
-    // -----------------------
-    // Trimming chat for sending messages to chatbot
-    // -----------------------
-    const trimmedMessage = inputMessage.trim();
-    if (trimmedMessage === "") return;
-    
-    const newMessage: ChatbotMessageType = {
-      role: "user",
-      content: trimmedMessage,
-    };
-    
+    if (inputMessage.trim() === "") return;
+  
+    let newMessage: ChatbotMessageType;
+  
+    if (inputMessage.startsWith("/quiz")) {
+      const parts = inputMessage.split("/");
+      const topic = parts[1]?.trim();
+  
+      if (!topic) {
+        alert("Please provide a topic after '/quiz'.");
+        return;
+      }
+  
+      newMessage = {
+        role: "user",
+        category: "quiz",
+        content: topic,
+      };
+    } else {
+      const trimmedMessage = inputMessage.trim();
+      newMessage = {
+        role: "user",
+        category: "chat",
+        content: trimmedMessage,
+      };
+    }
+  
     setMessages((prevMessages) => [...prevMessages, newMessage]);
     
+    // Add "Thinking" message
     const thinkingMessage: ChatbotMessageType = {
       role: "MindLoom",
+      category: "chat",
       content: "Thinking",
     };
-    
-    // -----------------------
-    // pre-requisites starts here
-    // -----------------------
-    setMessages((prevMessages) => [...prevMessages, thinkingMessage]);
     setThinking(true);
+    setMessages((prevMessages) => [...prevMessages, thinkingMessage]);
+  
+    // Reset input and focus textarea
     setInputMessage("");
     setRemainingChars(3000);
-    // -----------------------
-    // pre-requisites ends here
-    // -----------------------
-
+    
+  
     try {
       const botResponse = await chatbotChat(newMessage);
+
+      if (botResponse.category === "quiz" && typeof botResponse.content === "object" && "quiz" in botResponse.content) {
+        setQuiz(botResponse.content.quiz); // Access quiz data safely
+        setShowQuiz(); // Make the quiz visible
+      }
+      
       setMessages((prevMessages) => [
         ...prevMessages.filter((msg) => msg.content !== "Thinking"),
         botResponse,
@@ -151,12 +168,18 @@ const ChatBotChat = () => {
     } catch (error) {
       setMessages((prevMessages) => [
         ...prevMessages.filter((msg) => msg.content !== "Thinking"),
-        {role: "MindLoom", content: "Sorry, an error occurred. Please try again."},
+        {
+          role: "MindLoom",
+          category: "chat",
+          content: "Sorry, an error occurred. Please try again.",
+        },
       ]);
     } finally {
       setThinking(false);
     }
   };
+  
+  
 
   // -----------------------
   // Generating visualization
@@ -165,14 +188,15 @@ const ChatBotChat = () => {
     try {
       const thinkingMessage: ChatbotMessageType = {
         role: "MindLoom",
+        category: "chat",
         content: "Visualizing",
       };
 
       setMessages((prevMessages) => [...prevMessages, thinkingMessage]);
       setThinking(true);
-
+      
       const visualizationResponse:ChatbotMessageType = await visualizer();
-
+      
       setMessages((prevMessages) => [
         ...prevMessages.filter((msg) => msg.content !== "Visualizing"),
         visualizationResponse,
@@ -182,6 +206,7 @@ const ChatBotChat = () => {
         ...prevMessages.filter((msg) => msg.content !== "Visualizing"),
         {
           role: "MindLoom",
+          category: "chat",
           content: "Sorry, an error occurred while trying to visualize. Please try again.",
         },
       ]);
@@ -212,8 +237,9 @@ const ChatBotChat = () => {
           // Chatbot message display field
           // ------------------
           */}
-
+{!showQuiz &&
             <ChatbotMessages messages={messages} thinking={thinking} />
+}
             {/* 
           // -----------------------
           // Chatbot input field
@@ -222,12 +248,12 @@ const ChatBotChat = () => {
             <div className="sticky bottom-0 w-full max-w-3xl mx-auto md:px-4 pb-6 scroll-container">
               <div className="flex flex-col relative border rounded-xl border-dark-custom-blue-stroke dark:border-dark-custom-blue-stroke bg-white dark:bg-dark-custom-blue p-2">
                 <textarea
-                  disabled={thinking}
+                  disabled={thinking || showQuiz}
                   ref={textareaRef}
                   value={inputMessage}
                   onChange={handleInputMessage}
                   onKeyDown={handleKeyPress}
-                  className="w-full bg-white dark:bg-dark-custom-blue text-black dark:text-dark-primary-text px-3 py-3 outline-none resize-none overflow-y-scroll"
+                  className={`w-full bg-white text-black dark:text-dark-primary-text px-3 py-3 outline-none resize-none overflow-y-scroll`}
                   placeholder="Message MindLoom"
                   rows={1}
                   style={{minHeight: "2.5rem"}}
@@ -238,7 +264,7 @@ const ChatBotChat = () => {
                 <div className="flex justify-between items-center pt-2">
                   
                     <button
-                      disabled={thinking}
+                      disabled={thinking || showQuiz}
                       onClick={handleVisualizer}
                       className="disabled:text-dark-secondary-text/50 disabled:pointer-events-none bg-transparent transition-all text-black dark:text-dark-primary-text rounded-full p-2 focus:outline-none"
                       aria-label="Visualize button"
@@ -247,7 +273,7 @@ const ChatBotChat = () => {
                     </button>
                   
                     <button
-                      disabled={thinking}
+                      disabled={thinking || showQuiz}
                       onClick={handleSendMessage}
                       className="disabled:text-dark-secondary-text/50 disabled:pointer-events-none mr-2 text-black dark:text-dark-primary-text rounded-full size-10 lg:size-11 focus:outline-none transition-all"
                       aria-label="Send message"
@@ -260,6 +286,9 @@ const ChatBotChat = () => {
             </div>
           </div>
         </div>
+        {showQuiz &&
+        <QuizModal />
+        }
       </div>
   );
 };

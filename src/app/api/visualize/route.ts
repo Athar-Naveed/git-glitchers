@@ -12,8 +12,8 @@ const apiUrl = process.env.PRODUCTION_CHATBOT_API_URL;
 // Fetching visualization here
 // ------------------------
 export async function GET() {
-  const cookie = cookies();
-//   const token = cookie.get("serviceToken")?.value;
+  // const cookie = await cookies();
+  // const token = cookie.get("serviceToken")?.value;
 
   try {
     const res = await fetch(`${apiUrl}/visualize`, {
@@ -27,30 +27,6 @@ export async function GET() {
     const data = await res.json();
     return NextResponse.json({message: data.animation_path}, {status: 200});
   } catch (error) {
-    return NextResponse.json({error: error}, {status: 500});
-  }
-}
-
-// ------------------------
-// Fetching meaning here
-// ------------------------
-export async function POST(request: NextRequest) {
-  const cookie = cookies();
-//   const token = cookie.get("serviceToken")?.value;
-  const data = await request.json();
-  try {
-    const res = await fetch(`${apiUrl}/get_meaning`,{
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        // Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(data),
-    })
-    const meaning = await res.json();
-    return NextResponse.json({message: meaning,status:200}, {status: 200});
-  } catch (error) {
-    
     return NextResponse.json({error: error}, {status: 500});
   }
 }

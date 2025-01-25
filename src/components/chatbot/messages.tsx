@@ -7,7 +7,7 @@ import {useState, useRef, useEffect,memo} from "react";
 import {ChatbotMessageType} from "@/types";
 import {ChevronDown} from "lucide-react";
 import Markdown from "react-markdown";
-
+import remarkGfm from 'remark-gfm'
 // ------------------------
 // Messages are being displayed here
 // ------------------------
@@ -85,8 +85,8 @@ const ChatbotMessages = memo(({
       <div
         className={`inline-block rounded-xl break-words max-w-[290px] overscroll-x-scroll no-scrollbar sm:max-w-[600px] md:max-w-[700px] lg:max-w-[600px] xl:max-w-[800px] ${
           message.role !== "MindLoom"
-            ? "bg-dark-custom-blue text-dark-primary-text"
-            : "text-light-light-black dark:text-dark-primary-text"
+            ? "bg-slate-900 text-slate-200"
+            : "text-slate-900"
         }`}
       >
         {message.role !== "MindLoom" ? (
@@ -112,7 +112,7 @@ const ChatbotMessages = memo(({
           <>
             <div className="flex">
               <Image
-                src="/next.svg"
+                src="/logo.png"
                 width={35}
                 height={35}
                 alt="MindLoom"
@@ -126,7 +126,7 @@ const ChatbotMessages = memo(({
               {/* Display both text content and visualization if available */}
               {message.content && (
                 <bdi className="leading-10 no-scrollbar">
-                  <Markdown>{message.content}</Markdown>
+                  <Markdown remarkPlugins={[remarkGfm]}>{message.content}</Markdown>
                 </bdi>
               )}
               {message.visualization && (

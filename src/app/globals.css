@@ -1,30 +1,28 @@
 @tailwind base;
-/* Hide scrollbar for WebKit browsers */
-.scroll-container::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Edge */
-  }
-  
-  /* Hide scrollbar for other browsers */
-  .scroll-container {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
-    overflow: -moz-scrollbars-none; /* Older versions of Firefox */
-  }
-  
-  /* Fallback for Safari (optional - not needed if the scrollbar is hidden in webkit above) */
-  .scroll-container {
-    overflow: auto; /* Ensures scrollable content */
-  }
 @tailwind components;
 @tailwind utilities;
 
-@layer components {
-  html,
-  body {
-    @apply bg-white m-0 p-0 w-full h-full selection:bg-slate-600 selection:text-white;
-  }
+/* Hide scrollbar for all browsers */
+.scroll-container {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
 
-  * {
-    @apply box-border;
+.scroll-container::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
+}
+
+@layer components {
+  html {
+    scroll-behavior: smooth;
+  }
+  .reglo {
+    @apply flex items-center justify-center;
+  }
+  .reglo-form {
+    @apply max-w-lg sm:max-w-md xl:max-w-xl p-6 mt-20 bg-white rounded-lg shadow-md;
+  }
+  .reglo-input-field {
+    @apply w-full px-3 py-2 border border-slate-900 text-black placeholder:text-slate-600 bg-transparent rounded-md pl-10 outline-none;
   }
 }

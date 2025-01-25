@@ -3,18 +3,18 @@ import { Zap, Users, BarChart } from "lucide-react"
 const features = [
   {
     icon: <Zap className="h-10 w-10 text-primary" />,
-    title: "Lightning Fast",
-    description: "Our platform is optimized for speed, ensuring your team can work efficiently.",
+    title: "Video Visualization",
+    description: "You learn better when someone draws images of that topic, right? That's what our chatbot does!",
   },
   {
     icon: <Users className="h-10 w-10 text-primary" />,
-    title: "Team Collaboration",
-    description: "Seamlessly work together with your team members in real-time.",
+    title: "Doing Quizzes",
+    description: "Thinking of doing quizzes? Just type '/quiz' and give it a topic, it'll generate a quiz for you.",
   },
   {
     icon: <BarChart className="h-10 w-10 text-primary" />,
-    title: "Insightful Analytics",
-    description: "Gain valuable insights into your projects with our powerful analytics tools.",
+    title: "English is Difficult",
+    description: "English is difficult to understand? Our chatbot is multilingual.",
   },
 ]
 

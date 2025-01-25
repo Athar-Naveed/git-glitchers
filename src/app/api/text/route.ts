@@ -15,7 +15,7 @@ const apiUrl = process.env.PRODUCTION_CHATBOT_API_URL;
 // ------------------------
 // Extracting jwt token from cookies
 // ------------------------
-// function getToken() {
+// async function getToken() {
 //   const cookie = cookies();
 //   return cookie.get("serviceToken")?.value;
 // }
@@ -24,12 +24,12 @@ const apiUrl = process.env.PRODUCTION_CHATBOT_API_URL;
 // 1 universal function for all get/post api requests
 // ------------------------
 async function fetchChatbotData(url: string, method: string, body?: any) {
-//   const token = getToken();
+  // const token = getToken();
   const response = await fetch(url, {
     method: method,
     headers: {
       "Content-Type": "application/json",
-    //   Authorization: `Bearer ${token}`,
+      // Authorization: `Bearer ${token}`,
     },
     body: body ? JSON.stringify(body) : undefined,
   });
@@ -45,8 +45,13 @@ export async function POST(request: NextRequest) {
     if (chatbotData.detail != undefined && chatbotData.detail.status === 401) {
       return NextResponse.json({message: chatbotData.detail.message, status: 401}, {status: 401});
     }
-    
-    return NextResponse.json({message: chatbotData.message, status: 200}, {status: 200});
+    if (chatbotData.message){
+      return NextResponse.json({message: chatbotData.message, status: 200}, {status: 200});
+    }
+    else{
+      
+      return NextResponse.json({message: chatbotData, status: 200}, {status: 200});
+    }
   } catch (error: any) {
     console.error("Error in chatbot API request:", error);
     return NextResponse.json({message: "Chatbot request failed.", status: 500}, {status: 500});
@@ -57,6 +62,8 @@ export async function POST(request: NextRequest) {
 // Fetching user chats with chatbot
 // ------------------------
 export async function GET() {
+  // const token = getToken();
+  // console.log(`token: ${JSON.stringify(token)}`)
   try {
     const chatbotDat = await fetch(`${apiUrl}/get_conversation_history`, {
       method: "GET",

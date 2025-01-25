@@ -10,6 +10,6 @@ export const navLinks: NavLinksType[] = [
     },
     {
         title: "Features",
-        href: "#features",
+        href: "/#features",
     },
 ]
