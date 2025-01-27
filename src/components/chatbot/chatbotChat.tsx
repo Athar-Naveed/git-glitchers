@@ -42,7 +42,7 @@ const ChatBotChat = () => {
           {
             role: "MindLoom",
             category: "chat",
-            content: "MindLoom has been shut down, and transferred to [mypath.one](https://mypath.one).",
+            content: "The chatbot has been transferred to [mypath.one](https://mypath.one). Please visit the site for use as this site won't be updated anymore.",
           },
         ]);
         // const resp = await fetchChatHistory();
